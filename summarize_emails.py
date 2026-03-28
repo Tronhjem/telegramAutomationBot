@@ -92,7 +92,9 @@ def summarize_emails(auto_read=True):
             gmail.mark_as_read(service, unimportant_ids)
 
     # Strip the classification lines from the user-facing summary
-    summary = re.sub(r"\n*```?\n?IMPORTANT:.*\nUNIMPORTANT:.*\n?```?\n*", "", response).strip()
+    summary = re.sub(r"(?m)^\s*IMPORTANT:.*$", "", response)
+    summary = re.sub(r"(?m)^\s*UNIMPORTANT:.*$", "", summary)
+    summary = re.sub(r"\n{3,}", "\n\n", summary).strip()
 
     return summary
 
