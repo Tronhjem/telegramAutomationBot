@@ -1,10 +1,10 @@
 # Telegram Automation Bot
 
-A Python Telegram bot that fetches unread Gmail messages, summarizes them using Claude CLI, and auto-marks unimportant emails as read.
+A Python Telegram bot that fetches unread Gmail messages, summarizes them using the Claude API, and auto-marks unimportant emails as read.
 
 ## Features
 
-- Fetch and summarize unread emails via Claude AI
+- Fetch and summarize unread emails via the Claude API (Haiku model)
 - Auto-classify emails as important/unimportant
 - Unimportant emails are automatically marked as read
 - Customizable prompt template for email categorization
@@ -30,13 +30,20 @@ pip install -r requirements.txt
 3. Choose a name and username (must end in `bot`)
 4. Copy the bot token
 
-### 3. Configure environment
+### 3. Get a Claude API key
+
+1. Go to [console.anthropic.com](https://console.anthropic.com/) and create an account
+2. Navigate to **API Keys** and generate a new key
+3. Copy the key (starts with `sk-ant-`)
+
+### 4. Configure environment
 
 Create a `.env` file in the project root:
 
 ```
 BOT_TOKEN=your-telegram-bot-token
 CHAT_ID=
+ANTHROPIC_API_KEY=your-anthropic-api-key
 ```
 
 Start the bot (`python bot.py`), then send `/start` to your bot in Telegram. It will reply with your chat ID. Add it to `.env`:
@@ -45,7 +52,7 @@ Start the bot (`python bot.py`), then send `/start` to your bot in Telegram. It 
 CHAT_ID=your-chat-id
 ```
 
-### 4. Set up Gmail API
+### 5. Set up Gmail API
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/) and create a project
 2. Enable the **Gmail API** (APIs & Services > Library)
@@ -54,10 +61,6 @@ CHAT_ID=your-chat-id
 5. Download the JSON file, rename it to `credentials.json`, and place it in the project root
 6. Go to APIs & Services > OAuth consent screen > add your Gmail as a **test user**
 7. Run `python gmail.py` — a browser window opens for consent. After granting access, `token.json` is created automatically
-
-### 5. Install Claude CLI
-
-The email summarization uses [Claude Code](https://claude.ai/claude-code) CLI. Install it and make sure `claude` is available in your PATH.
 
 ## Usage
 
@@ -110,8 +113,9 @@ Edit `prompts/email_summary.md` to change how Claude categorizes and formats the
 bot.py                  # Telegram bot with polling
 send.py                 # CLI message sender
 gmail.py                # Gmail API module
-summarize_emails.py     # Email fetch + Claude summarization
+summarize_emails.py     # Email fetch + Claude API summarization
 cron_emails.sh          # Cron-friendly wrapper script
+cron_emails_server.sh   # Server variant of the cron script
 prompts/
   email_summary.md      # Editable Claude prompt template
 ```
